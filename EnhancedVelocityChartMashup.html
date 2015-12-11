@@ -105,7 +105,7 @@ function EVC_Chart(node_id) {
             } else if (series.title.indexOf(SERIES_2_TITLE) > -1) {
                 return 'Accepted After the Iteration: <br>' + Math.round(point.y * 100) / 100 + ' ' + label + ' (' + pct.toFixed(0) + '%)';
             } else if (series.title.indexOf(SERIES_3_TITLE) > -1) {
-                return 'Not Yet Accepted: ' + Math.round(point.y * 100) / 100 + ' ' + label + ' (' + pct.toFixed(0) + '%)';
+                return 'Not Accepted: ' + Math.round(point.y * 100) / 100 + ' ' + label + ' (' + pct.toFixed(0) + '%)';
             } else {
                 throw "Unrecognized series: " + series.title;
             }
@@ -170,7 +170,7 @@ function EVC_Chart(node_id) {
         num3Series.title = SERIES_3_TITLE;
         num3Series.color = "#AAAAAA";
         num3Series.lineWidth = 1;
-        num3Series.opacity = 1;
+        num3Series.opacity = 75;
         sbSeries.addSeries(num3Series);
 
     };

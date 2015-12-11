@@ -1,17 +1,19 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!-- Copyright (c) 2011  Rally Software Development Corp.  All rights reserved -->
 <html>
 <head>
-    <title>Print Story Cards</title>
-    <meta name="Name" content="App: Print Story Cards"/>
+    <title>Print Task Cards</title>
+    <meta name="Name" content="App: Print Task Cards"/>
     <meta name="Version" content="2012.02.21"/>
     <meta name="Vendor" content="Rally Software"/>
     <script type="text/javascript" src="/apps/1.33/sdk.js?apiVersion=1.29"></script>
 
     <script type="text/javascript">
     var MAX_NAME_LEN = 115;
-        var APP_TYPE = "Story";
-        var CARD_TYPE = "stories";
+        var APP_TYPE = "Task";
+        var CARD_TYPE = "tasks";
         
-        function PrintStoryCards(rallyDataSource) {
+        function PrintTaskCards(rallyDataSource) {
             var iterationDropdown;
         
             function displayCards(results) {
@@ -130,9 +132,9 @@
         
                 queryArray[0] = {
                     key: CARD_TYPE,
-                    type: 'hierarchicalrequirement',
-                    query: '(Iteration.Name contains "' + iterationDropdown.getSelectedName() + '")',
-                    fetch: 'Name,Iteration,Owner,FormattedID,PlanEstimate,ObjectID,Description,UserName',
+                    type: CARD_TYPE,
+                    query: '(Iteration.Name contains "' + iterationDropdown.getSelectedName() + '")', 
+                    fetch: 'Name,Iteration,WorkProduct,Owner,FormattedID,Estimate,ObjectID,Description,UserName',
                     order: 'Rank'
                 };
                 queryArray[1] = {
@@ -154,7 +156,7 @@
             }
         
             function printPop() {
-                var title, options, printWindow, doc, cardMarkup;
+                var title, options, printWindow, doc, fileref, cardMarkup;
         
                 title = CARD_TYPE.slice(0, 1).toUpperCase() + CARD_TYPE.slice(1);
                 options = "toolbar=1,menubar=1,scrollbars=yes,scrolling=yes,resizable=yes,width=1000,height=500";
@@ -177,6 +179,9 @@
             }
         
             this.display = function() {
+			    //iterationDropdown = new rally.sdk.ui.ReleaseDropdown({}, rallyDataSource);
+                //iterationDropdown.display("iterationDropdown", runQuery);
+				
                 iterationDropdown = new rally.sdk.ui.IterationDropdown({}, rallyDataSource);
                 iterationDropdown.display("iterationDropdown", runQuery);
         
@@ -223,7 +228,7 @@
             clear: both;
         }
         .artifact {
-            background-color: #FFF;
+            background-color: #fff;
             border: 2px solid #000;
             float: left;
             height: 3.2in;
@@ -233,13 +238,14 @@
             width: 4.3in;
         }
         .header {
+		    background-color: yellow;
             border: 1px;
             border-bottom-style: solid;
             display: table-cell;
+            font-size: 18px;
             height: 40px;
             vertical-align: middle;
             width: 4.3in;
-			background-color: magenta;
         }
         .card-title {
             font: bold 28px Genova, sans-serif;
@@ -271,8 +277,6 @@
             font: 14pt / 1.26 Arial, Helvetica, sans-serif;
             margin-left: 0.25em;
             margin-top: 0.3em;
-			background-color: #fff;
-			font-weight:bold;
         }
         .estimate {
             bottom: 0.5em;
@@ -287,13 +291,13 @@
     </style>
     <script type="text/javascript">
         function onLoad() {
-            rally.sdk.ui.AppHeader.setHelpTopic("241");
+            rally.sdk.ui.AppHeader.setHelpTopic("242");
             var rallyDataSource = new rally.sdk.data.RallyDataSource('__WORKSPACE_OID__',
                     '__PROJECT_OID__',
                     '__PROJECT_SCOPING_UP__',
                     '__PROJECT_SCOPING_DOWN__');
-            var printStoryCards = new PrintStoryCards(rallyDataSource);
-            printStoryCards.display(dojo.body());
+            var printTaskCards = new PrintTaskCards(rallyDataSource);
+            printTaskCards.display(dojo.body());
         }
         rally.addOnLoad(onLoad);
     </script>
@@ -301,7 +305,7 @@
 <body>
 This will Print 4 Cards per page on one side. <br>
 <b>Do not print this using the 2 sided printing.</b><br>
-To print the Magenta banner you need to have background graphics checked/turned on.
+To print the Yellow banner you need to have background graphics checked/turned on.
 <div style="float:right" id="help"></div>
 <div id="interface">
     <div id="iterationDropdown"></div>

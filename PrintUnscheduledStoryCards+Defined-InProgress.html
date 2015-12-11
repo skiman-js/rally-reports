@@ -1,3 +1,5 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!-- Copyright (c) 2011  Rally Software Development Corp.  All rights reserved -->
 <html>
 <head>
     <title>Print Story Cards</title>
@@ -13,6 +15,7 @@
         
         function PrintStoryCards(rallyDataSource) {
             var iterationDropdown;
+			var relDropdown;
         
             function displayCards(results) {
                 var estimate, loginName, ownerClass, storyId, taskId, description,
@@ -51,7 +54,7 @@
                     } else if (data[i].Estimate) {
                         estimate = data[i].Estimate;
                     } else {
-                        estimate = "None";
+                        estimate = "&nbsp";
                     }
         
                     description = data[i].Description;
@@ -127,11 +130,16 @@
             function runQuery() {
                 dojo.empty(dojo.byId("cards"));
                 var queryArray = [];
-        
+        //Iteration
+		//query: '(Iteration.Name contains "' + iterationDropdown.getSelectedName() + '")', 
+		// Backlog
+		// query: '((Release = null) AND (Iteration = null))',                  
+		//Relese
+		// query: '(Release.Name = "' + relDropdown.getSelectedName() + '")',   
                 queryArray[0] = {
                     key: CARD_TYPE,
                     type: 'hierarchicalrequirement',
-                    query: '(Iteration.Name contains "' + iterationDropdown.getSelectedName() + '")',
+					query: '(((Release = null) AND (Iteration = null)) AND  ((ScheduleState = Defined) OR (ScheduleState = In-Progress)))',
                     fetch: 'Name,Iteration,Owner,FormattedID,PlanEstimate,ObjectID,Description,UserName',
                     order: 'Rank'
                 };
@@ -142,7 +150,8 @@
                 };
                 rallyDataSource.findAll(queryArray, displayCards);
             }
-        
+
+					
             function getStyleSheet() {
                 var styleSheet;
                 dojo.forEach(dojo.query('style'), function(s) {
@@ -177,15 +186,20 @@
             }
         
             this.display = function() {
-                iterationDropdown = new rally.sdk.ui.IterationDropdown({}, rallyDataSource);
+				
+                iterationDropdown = new rally.sdk.ui.ReleaseDropdown({}, rallyDataSource);
                 iterationDropdown.display("iterationDropdown", runQuery);
         
                 var config = {
                     text: "Print " + APP_TYPE + " Cards",
                     value: "myValue"
                 };
+				
                 var button = new rally.sdk.ui.basic.Button(config);
                 button.display("buttonDiv", printPop);
+				
+				
+				
             };
         }
     </script>
@@ -271,7 +285,7 @@
             font: 14pt / 1.26 Arial, Helvetica, sans-serif;
             margin-left: 0.25em;
             margin-top: 0.3em;
-			background-color: #fff;
+			background-color: #FFF;
 			font-weight:bold;
         }
         .estimate {
@@ -280,7 +294,7 @@
             right: 0.5em;
         }
         .content {
-            height: 2.4in;
+Custom HTML            height: 2.4in;
             overflow: hidden;
             width: 4.3in;
         }
@@ -303,9 +317,11 @@ This will Print 4 Cards per page on one side. <br>
 <b>Do not print this using the 2 sided printing.</b><br>
 To print the Magenta banner you need to have background graphics checked/turned on.
 <div style="float:right" id="help"></div>
+
 <div id="interface">
-    <div id="iterationDropdown"></div>
-    <div id="buttonDiv"></div>
+ <!--   <div id="releaseDiv"></div>  -->
+    <div id="iterationDropdown" style="display:none"></div>
+    <div id="buttonDiv"></div> 
 </div>
 <div id="printSection">
     <div id="cards"></div>
