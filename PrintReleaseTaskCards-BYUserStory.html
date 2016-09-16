@@ -26,7 +26,8 @@
         
                 userTable = buildUserTable(results.users);
         
-                data = results[CARD_TYPE];
+                data = results[CARD_TYPE].concat(results['Stories']);
+				console.log(data);
                 var response = prompt("Please Enter User Story ID:","");
 				var selectedID = response.toUpperCase();
 				var card_Num = 0;
@@ -96,11 +97,22 @@
                 var theMarkup, id;
                 if (CARD_TYPE === 'stories') {
                     id = storyId;
+					theMarkup =
+                        '<div class="artifact">' +
+                                '<div class="headerUS">' +
+                                '<span class="storyID">' + id + '</span>' +
+                                '<span class="owner ' + ownerClass + '">' + '</span>' +
+                                '<span class="ownerText">' + ownerText + '</span>' +
+                                '</div>' +
+                                '<div class="content">' +
+                                '<div class="card-title">' + name + '</div>' +
+                                '<div class="description">' + description + '</div>' +
+                                '</div>' +
+                                '<span class="estimate">' + estimate + '</span>' +
+                                '</div>';
                 } else {
                     id = taskId + ':' + storyId;
-                }
-        
-                theMarkup =
+                     theMarkup =
                         '<div class="artifact">' +
                                 '<div class="header">' +
                                 '<span class="storyID">' + id + '</span>' +
@@ -113,6 +125,7 @@
                                 '</div>' +
                                 '<span class="estimate">' + estimate + '</span>' +
                                 '</div>';
+								}
         
                 if ((cardNum + 1) % 4 === 0) {
                     theMarkup = theMarkup + '<div class=pb></div>';
@@ -146,7 +159,14 @@
                     fetch: 'Name,Iteration,WorkProduct,Owner,FormattedID,Estimate,ObjectID,Description,UserName',
                     order: 'Rank'
                 };
-                queryArray[1] = {
+				queryArray[1] = {
+                    key: 'Stories',
+                    type: 'hierarchicalrequirement',
+                    query: '(Iteration.Name contains "' + iterationDropdown.getSelectedName() + '")',
+                    fetch: 'Name,Iteration,Owner,FormattedID,PlanEstimate,ObjectID,Description,UserName',
+                    order: 'Rank'
+                }
+                queryArray[2] = {
                     key: 'users',
                     type: 'users',
                     fetch: 'UserName,ObjectID,DisplayName'
