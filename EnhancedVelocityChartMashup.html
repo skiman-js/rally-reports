@@ -75,7 +75,10 @@ function EVC_Chart(node_id) {
             axis_left:{
                 min_extreme:0.0,
                 caption: "Plan Estimates"
-            }
+            },
+			axisX: {
+				labelAngle: -30
+			},
         });
 
         this.ejsChart.onShowHint = function(point, series, chart, hint, hoverOrSelect) {
@@ -97,6 +100,7 @@ function EVC_Chart(node_id) {
             }
 
             var label = prevISet.planEstimateLabel;
+			label.labelAngle = -30;
 
              // console.log("hint: series.title = "+series.title+", iteration # "+ (point.x - 1) + ", totalPoints = "+total+", y = "+point.y+", pct = "+pct);
 
@@ -146,6 +150,7 @@ function EVC_Chart(node_id) {
         num1Series.color = "#3A874F";
         num1Series.lineWidth = 1;
         num1Series.opacity = 100;
+		num1Series.labelAngle: 90;
         sbSeries.addSeries(num1Series);
 
         if (includeTrendLine) {
@@ -154,6 +159,8 @@ function EVC_Chart(node_id) {
             tlSeries.lineWidth = 1;
             tlSeries.color = "#3A874F";
             tlSeries.opacity = 100;
+			tlSeries.labelAngle:-30;
+			this.ejsChart.labelAngle:-30;
             this.ejsChart.addSeries(tlSeries);
         }
 
@@ -220,6 +227,8 @@ function onLoaded() {
     var data = prevISet.getData();
     _chart.drawStackedBarSeries(data.bars, prevISet.size() > 1);
     _chart.drawAverages(data.avgs, "divAverages");
+	_chart.axisX.labelAngle=-30;
+	_chart.indexLabelOrientation="vertical";
 }
 
 function onError(evt, msg) {
